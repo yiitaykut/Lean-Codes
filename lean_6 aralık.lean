@@ -1,0 +1,77 @@
+import Mathlib
+
+open Set
+
+open Real
+
+
+
+example {α : Type} (A B C : Set α) :
+
+    A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C) := by
+    ext x -- ikiye böldü
+    constructor -- ikiye bölünmüş halini tek tek kanıtlamak için
+
+    intro h0 -- ileri yön
+
+    have h1 : x ∈ A := h0.left
+    have h2 : x ∈ B ∪ C := h0.right
+
+    cases h2 -- birleşimin iki durumuna da bakmak için
+
+    have h3 : x ∈ A ∩ B := And.intro h1
+
+    exact Or.inl h3 -- h3 veya h4 olduğunu göstermek için
+
+    have h4 : x ∈ A ∩ C := And.intro h1
+
+    exact Or.inr h4 -- h3 veya h4 olduğunu göstermek için
+
+    intro h5
+    cases h5
+
+    have h6 : x ∈ A := h5.left
+    have h7 : x ∈ B := h5.left
+    have h8 : x ∈ B ∪ C := Or.inl h7
+
+    exact And.intro h6 h8
+
+    have h9 : x ∈ A := h5.left
+    have h10 : x ∈ C := h5.left
+    have h11 : x ∈ B ∪ C := Or.inr h10
+
+    exact And.intro h9 h11
+
+
+def fH1 (x : ℝ) : ℝ := 5 * x - 2
+
+
+
+example : Function.Injective fH1 := by
+
+  -- göstermek istediğimiz fH1(x1) = fH2(x2) ise x1=x2 olduğu
+
+  intro x1 x2 h0 -- h0 : fH1(x1) = fH2(x2) olması
+
+  rw[fH1] at h0 -- bunun sayesinde 5 * x1 - 2 = 5 * x2 - 2 oldu
+
+  simp [fH1] at h0 -- bunun sayesinde 5 * x1 = 5 * x2 oldu
+
+  linarith -- bunun sayesinde de x1 = x2 oldu (lin yazdım lean'in içinde,karşıma çıktı ve çözdü , beklemiyordum çözmesini)
+
+
+
+
+
+example : Real.sin (π / 3) = Real.sqrt 3 / 2 := by
+
+  -- Use `Real.sin_pi_div_three`.
+
+  simp [Real.sin_pi_div_three]
+
+
+
+example (x : ℝ) : Real.sin x ^ 2 + Real.cos x ^ 2 = 1 := by
+
+  simp [Real.sin_sq_add_cos_sq] -- Real.sin_sqrt yanlış, Real.sin_sq + Real.cos_sq yanlış
+-- Real.sin_sq_plus.cos_sq yanlış ve Real.sin_sq_add_Real.cos_sq yanlış
